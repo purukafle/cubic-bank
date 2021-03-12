@@ -63,7 +63,6 @@ public class CustomerAccountEnquiryControllerTest {
 		 .accept(MediaType.APPLICATION_JSON))
          .andExpect(status().isOk())
          .andExpect(jsonPath("$", hasSize(2)))
-         ////[{"csaid":122,"name":"nagendra","email":"nagen@gmail.com"},{{"csaid":123,"name":"ashish","email":"ashish@gmail.com"}}]
          .andExpect(jsonPath("$[0].csaid", is(122)))
          .andExpect(jsonPath("$[0].name", is("nagendra")))
          .andExpect(jsonPath("$[0].email", is("nagen@gmail.com")))

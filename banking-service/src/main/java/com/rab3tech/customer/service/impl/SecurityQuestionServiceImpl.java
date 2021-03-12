@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,6 +64,15 @@ public class SecurityQuestionServiceImpl implements SecurityQuestionService {
 	
 	}
 	
+	@Override
+	public List<String> findQuestionAnswer(String email) {
+		List<String> customerQuestions =new ArrayList<>();  
+		List<CustomerQuestionAnswer> customerQuestionAnswers=customerQuestionsAnsRepository.findQuestionAnswer(email);
+		for(CustomerQuestionAnswer customerQuestionAnswer:customerQuestionAnswers){
+			customerQuestions.add(customerQuestionAnswer.getQuestion());
+		}
+		return customerQuestions;
+	}
 	
 	@Override
 	public List<SecurityQuestionsVO>  findAll(){
