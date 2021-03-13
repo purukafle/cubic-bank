@@ -75,6 +75,19 @@ public class SecurityQuestionServiceImpl implements SecurityQuestionService {
 	}
 	
 	@Override
+	public boolean validateQuestionAnswer(String email,String securityAns1,String securityAns2) {
+		boolean status=false;
+		List<CustomerQuestionAnswer> customerQuestionAnswers=customerQuestionsAnsRepository.findQuestionAnswer(email);
+		if(customerQuestionAnswers!=null && customerQuestionAnswers.size()==2){
+			if(customerQuestionAnswers.get(0).getAnswer().equals(securityAns1) && 
+					customerQuestionAnswers.get(1).getAnswer().equals(securityAns2)) {
+				status = true;
+			}
+		}
+		return status;
+	}
+	
+	@Override
 	public List<SecurityQuestionsVO>  findAll(){
 		List<SecurityQuestions>  securityQuestions=questionsRepository.findAll();
 		List<SecurityQuestionsVO> questionsVOs=new ArrayList<>();
