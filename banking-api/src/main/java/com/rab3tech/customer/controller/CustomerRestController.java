@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,6 +37,9 @@ public class CustomerRestController {
 	
 	@Autowired
 	private CustomerService customerService;
+	
+	 @Autowired
+	 private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	
 	@GetMapping("/amount/words") 
@@ -123,12 +127,29 @@ public class CustomerRestController {
 	
 	@PostMapping("/user/login")
 	public ApplicationResponseVO authUser(@RequestBody LoginRequestVO loginRequestVO) {
+		//{
+		 //  "username":"javahunk100@gmail.com",
+		  // "password":"test@1231"
+		//}
+		//this loginvo contains password
 		Optional<LoginVO>  optional=loginService.findUserByUsername(loginRequestVO.getUsername());
 		ApplicationResponseVO applicationResponseVO=new ApplicationResponseVO();
 		if(optional.isPresent()) {
+			//test@123
+			String password=loginRequestVO.getPassword();
+			//$2a$10$hMLCz4az4cSHIN9ADIF5F.RobD4wxS49Q0DrEYHbWf0cutfcA9tZ.
+			String encodedPassword=optional.get().getPassword();
+			boolean b=bCryptPasswordEncoder.matches(password, encodedPassword);
+			//compare the password
+			//"test@123"
+			if(b==false){
+				applicationResponseVO.setMessage("password is not correct");
+			}else{
+				applicationResponseVO.setMessage("Userid is correct");
+			}
 			applicationResponseVO.setCode(200);
 			applicationResponseVO.setStatus("success");
-			applicationResponseVO.setMessage("Userid is correct");
+		
 		}else {
 			applicationResponseVO.setCode(400);
 			applicationResponseVO.setStatus("fail");

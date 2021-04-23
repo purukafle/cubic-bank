@@ -28,11 +28,11 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 	 	
-	 <!--    <dependency>
+	  <dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency> 
-		 -->
+		
 			<!-- Below dependency download embedded tomcat -->
 		<dependency>
 			<!-- Setup Spring Boot -->
@@ -69,7 +69,7 @@
 
 	</dependencies>
 	
-<!--  <dependencyManagement>
+  <dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>org.springframework.cloud</groupId>
@@ -80,7 +80,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement> 
- -->
+
 	<build>
 		<plugins>
 			<plugin>

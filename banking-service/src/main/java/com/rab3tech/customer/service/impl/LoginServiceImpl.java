@@ -143,6 +143,17 @@ public class LoginServiceImpl implements LoginService {
 		}
 	}
 	
+	
+	@Override
+	public RoleVO saveRole(RoleVO roleVO){
+		Role role=new Role();
+		role.setDescription(roleVO.getDescription());
+		role.setName(roleVO.getName());
+		Role drole=roleRepository.save(role);
+		roleVO.setId(drole.getRid());
+		return roleVO;
+	}
+	
 	@Override
 	public List<RoleVO> findRoles(){
 		List<Role> roles=roleRepository.findAll();

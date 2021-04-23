@@ -66,7 +66,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     .deleteCookies("JSESSIONID");
 
    // http.sessionManagement().invalidSessionUrl("/customer/timeout");
-    //http.sessionManagement().maximumSessions(2);
+    http.sessionManagement().maximumSessions(1);
     
 
     /* http.authorizeRequests()*/

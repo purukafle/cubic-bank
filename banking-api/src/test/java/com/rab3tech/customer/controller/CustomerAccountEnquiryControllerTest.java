@@ -58,7 +58,9 @@ public class CustomerAccountEnquiryControllerTest {
 		 CustomerSavingVO customerSavingVO2=new CustomerSavingVO(123,"ashish","ashish@gmail.com","92882","NT","Current","Pending","S9393",null,"B435");
 		 customerSavingVOs.add(customerSavingVO1);
 		 customerSavingVOs.add(customerSavingVO2);
+		
 		 when(customerEnquiryService.findAll()).thenReturn(customerSavingVOs);
+		 
 		 mockMvc.perform(get("/v3/customers/enquiry")
 		 .accept(MediaType.APPLICATION_JSON))
          .andExpect(status().isOk())
@@ -104,15 +106,16 @@ public class CustomerAccountEnquiryControllerTest {
 		  CustomerSavingVO customerSavingVO=new CustomerSavingVO(0,"nagendra","nagen@gmail.com","02390","NA","Saving","Appoved","C9393",null,"A435");
 		  when(customerEnquiryService.emailNotExist("nagen@gmail.com")).thenReturn(true);
 	 	  when(customerEnquiryService.save(customerSavingVO)).thenReturn(customerSavingVO);
-	 	 mockMvc.perform(MockMvcRequestBuilders.post("/v3/customers/enquiry")
+	 	
+	 	  mockMvc.perform(MockMvcRequestBuilders.post("/v3/customers/enquiry")
 	 	        .contentType(MediaType.APPLICATION_JSON)
 	 	        .content(TestUtil.convertObjectToJsonBytes(customerSavingVO))
 	 			.accept(MediaType.APPLICATION_JSON))
+	 	  		.andDo(print())
 	 			.andExpect(jsonPath("$.name").exists())
 	 			.andExpect(jsonPath("$.email").exists())
 	 			.andExpect(jsonPath("$.name").value("nagendra"))
-	 			.andExpect(jsonPath("$.email").value("nagen@gmail.com"))
-	 			.andDo(print());
+	 			.andExpect(jsonPath("$.email").value("nagen@gmail.com"));
 	 	 
 	 	verify(customerEnquiryService, times(1)).save(customerSavingVO);
  	    verify(customerEnquiryService, times(1)).emailNotExist("nagen@gmail.com");
