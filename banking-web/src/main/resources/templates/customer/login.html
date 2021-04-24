@@ -85,7 +85,7 @@
    <br/>
    <span th:utext="${error}" style="color: red;font-size: 18px;font-weight: bold;"  id="errorMessage"></span>
       <span th:utext="${message}" style="color: blue;font-size: 18px;font-weight: bold;"></span>
-  <div style="width: 70%">
+  <div style="width: 90%">
    <form th:action="@{/customer/login}" method="POST"   id="loginForm"  name="loginForm">
     <div class="form-group">
       <label for="username">Username:</label>
@@ -114,6 +114,10 @@
     
      <a th:href="@{/customer/customerSearch}">
     <button type="button" class="btn btn-success">Customer search</button>
+    </a>
+    
+    <a th:href="@{/bank/showBranch}">
+    <button type="button" class="btn btn-primary">Branch</button>
     </a>
   </form>
   </div>

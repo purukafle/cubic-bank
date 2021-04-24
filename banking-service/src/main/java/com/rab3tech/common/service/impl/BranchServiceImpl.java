@@ -25,6 +25,7 @@ public class BranchServiceImpl implements BranchService {
 	@Override
 	public void partialUpdate(final String fieldName,final String value,final int id) {
 		
+		//loading Entity class as per database id
 		Branch branch=branchRepository.findById(id).get();
 		
 		switch (fieldName) {
