@@ -78,6 +78,9 @@ function openCreditCard(name,email,userid){
   </marquee>
   <div style="width: 100%">
  <hr/>
+ <a th:href="@{/admin/addBranch}"><button type="button" class="btn btn-primary">Add Branch</button></a>
+ <hr/>
+ 
     <table id="enquiryList" class="table table-striped table-bordered" style="width:100%">
   <thead>
   <tr>
@@ -101,6 +104,13 @@ function openCreditCard(name,email,userid){
     <td th:text="${branch.state}"/>
     <td th:text="${branch.pin}"/>
     
+     <td>
+       <a th:href="@{'/admin/deleteBranch?name='+${branch.name}}"> 
+ 		 <button type="button" class="btn btn-danger">DELETE</button>
+ 	 </a>
+     </td>
+    
+   
   </tr>
   </tbody>
   </table>

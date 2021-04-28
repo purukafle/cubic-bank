@@ -43,6 +43,10 @@ public class BranchServiceImpl implements BranchService {
 		}	
 	}
 	
+	@Override
+	public void deleteByName(String  name) {
+		branchRepository.deleteByName(name);
+	}
 	
 	@Override
 	public void deleteById(int id) {

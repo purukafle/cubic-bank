@@ -20,4 +20,6 @@ public interface BranchService {
 
 	void partialUpdate(String fieldName, String value, int id);
 
+	void deleteByName(String name);
+
 }
