@@ -75,8 +75,11 @@ public class LoginServiceImpl implements LoginService {
 		loginVO.setUsername(loginid);
 		Optional<Login>  optional=loginRepository.findByLoginid(loginid);
 		if(optional.isPresent()) {
+			
+			int cid=customerRepository.findByEmail(loginid).get().getId();
 			Login login=optional.get();
 			loginVO.setEmail(login.getEmail());
+			loginVO.setCid(cid);
 			loginVO.setUsername(login.getLoginid());
 			loginVO.setPassword(login.getPassword());
 			loginVO.setLocked(login.getLocked());

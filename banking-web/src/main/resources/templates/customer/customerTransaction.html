@@ -62,11 +62,16 @@
    <span th:utext="${fromAccount}" style="color: red;font-size: 18px;">
    </span>
   <div style="width: 85%">
+       <img class="zoom" th:src="@{'/customer/profile/photo?cid=' + ${session.userSessionVO.cid}}" style="height: 120px;"/>
      <table class="table table-bordered" style="width: 100%;">
            <tr style="background-color: #95c929;">
              <td>SNO</td>
              <td>To Account</td>
-             <td>Amount</td>
+             <td>Amount
+              <a th:href="@{/customer/customerTransaction?sort=desc}"><button type="button" class="btn btn-warning">desc</button></a>
+                 <a th:href="@{/customer/customerTransaction?sort=asc}"><button type="button" class="btn btn-primary">asc</button></a>
+             
+             </td>
              <td>Details</td>
               <td>DOT</td>
               <td>Status</td>
@@ -75,7 +80,8 @@
            <tr th:each="customerTransaction,iter: ${customerTransactionVOs}">
              <td th:text="${iter.index+1}"/>
              <td th:text="${customerTransaction.toAccout}"/>
-              <td th:text="${customerTransaction.amount}"/>
+              <td th:text="${customerTransaction.amount}">
+               </td>
               <td th:text="${customerTransaction.details}"/>
              <td th:text="${customerTransaction.dot}"/>
            <td th:text="${customerTransaction.txStatus}"/>

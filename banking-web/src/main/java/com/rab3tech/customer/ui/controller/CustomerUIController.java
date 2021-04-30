@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -182,16 +183,28 @@ public class CustomerUIController {
 	}
 	
 	@GetMapping("/customer/customerTransaction")
-	public String showCustomerTransaction(Model model,HttpSession session) {
+	public String showCustomerTransaction(@RequestParam(required=false) String sort,Model model,HttpSession session) {
 		//Here we have to write logic to fetch data
 		//This is coming from session
 		LoginVO  loginVO2=(LoginVO)session.getAttribute("userSessionVO");
 		String currentLoggedInUserName=loginVO2.getUsername();
 		List<CustomerTransactionVO>  customerTransactionVOs=customerTransactionService.findCustomerTransaction(currentLoggedInUserName);
+		
+		
+		if(sort==null){
+			Collections.sort(customerTransactionVOs,(t1,t2)->t2.getDot().compareTo(t1.getDot()));
+		} 	
+		else{
+			if("desc".equals(sort)) {
+				Collections.sort(customerTransactionVOs,(t1,t2)->(int)(t2.getAmount()-t1.getAmount()));
+			}else {
+				Collections.sort(customerTransactionVOs,(t1,t2)->(int)(t1.getAmount()-t2.getAmount()));
+			}
+			
+		}
 		model.addAttribute("customerTransactionVOs", customerTransactionVOs);
 		//customer/accountSummary - view name
 		return "customer/customerTransaction"; // thyme leaf
-		
 	}
 	
 
