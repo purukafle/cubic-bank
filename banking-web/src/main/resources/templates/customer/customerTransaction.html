@@ -56,13 +56,18 @@
  <a th:href="@{/customer/logout}"><button type="button" class="btn btn-warning">Logout</button></a>
  <br/>
   <img th:src="@{/images/bubble.png}" alt="page"/>
+   
+    <img class="zoom" th:src="@{'/customer/profile/photo?cid=' + ${session.userSessionVO.cid}}" style="height: 120px;"/>
+    
+    <img th:src="@{/images/pencil.png}" alt="page"  data-toggle="modal" data-target="#changePhoto"/>
+   
     <hr/>
    <h2> From Account :</h2>
     <b>009282736363563</b>
    <span th:utext="${fromAccount}" style="color: red;font-size: 18px;">
    </span>
   <div style="width: 85%">
-       <img class="zoom" th:src="@{'/customer/profile/photo?cid=' + ${session.userSessionVO.cid}}" style="height: 120px;"/>
+      
      <table class="table table-bordered" style="width: 100%;">
            <tr style="background-color: #95c929;">
              <td>SNO</td>
@@ -103,7 +108,7 @@
 <div class="modal" id="chartModal">
   <div class="modal-dialog" style="width: 900px;">
     <div class="modal-content" style="width: 900px;">
-
+   
       <!-- Modal Header -->
       <div class="modal-header">
         <h4 class="modal-title">Customer Transaction!</h4>
@@ -120,6 +125,37 @@
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- The Modal -->
+<div class="modal" id="changePhoto">
+  <div class="modal-dialog" style="width: 900px;">
+    <div class="modal-content" style="width: 900px;">
+    
+    <!-- 
+    enctype ,  means you want to upload file  
+     -->
+  <form  th:action="@{/customer/upload/profile/pic}" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="cid"  th:value="${session.userSessionVO.cid}">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Edit Profile PC!</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <input type="file" name="photo" class="form-control">
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+       <button type="submit" class="btn btn-danger">Update</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+</form>
     </div>
   </div>
 </div>

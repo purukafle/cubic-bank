@@ -299,6 +299,15 @@ public class CustomerUIController {
 	   outputStream.flush();
 	   outputStream.close();
 	}
+	
+	@PostMapping("/customer/upload/profile/pic")
+	public String changeProfilePic(@RequestParam("cid")  int cid,@RequestParam("photo") MultipartFile pphoto) throws IOException {
+		byte[] photo=pphoto.getBytes();
+		customerService.updatePhoto(cid, photo);
+		return "redirect:/customer/customerTransaction";
+	}
+	
+	
 
   /*
 	@GetMapping(value = { "/customer/account/enquiry", "/", "/mocha", "/welcome" })
