@@ -24,6 +24,11 @@
 </style>
 
  <script type="text/javascript">
+      
+      //This is ready hander
+      $(document).ready(function() {
+          $("#enquiryList").hide();
+      });
         
       function showBrach() {
     	  
@@ -41,7 +46,9 @@
     			  contents=contents+'<td>'+data[x].pin+'</td>';
     			  contents=contents+'</tr>';
     		  }
+    		  $("#enquiryList").show();
     		  $("#rahimdata").html(contents);
+    		
     	  });
       }
  

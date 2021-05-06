@@ -73,8 +73,10 @@ public class BranchServiceImplTest {
 
 	@Test
 	public void testDeleteById() {
+		
 		//mocking the method which does return anything
 		doNothing().when(mochBranchRepository).deleteById(isA(Integer.class));
+		
 		branchServiceImpl.deleteById(100);
 		verify(mochBranchRepository, times(1)).deleteById(isA(Integer.class));
 		verifyNoMoreInteractions(mochBranchRepository);
