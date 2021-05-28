@@ -72,26 +72,14 @@
      <table class="table table-bordered" style="width: 100%;">
            <tr style="background-color: #95c929;">
              <td>SNO</td>
-             <td>To Account</td>
-             <td>Amount
-              <a th:href="@{/customer/customerTransaction?sort=desc}"><button type="button" class="btn btn-warning">desc</button></a>
-                 <a th:href="@{/customer/customerTransaction?sort=asc}"><button type="button" class="btn btn-primary">asc</button></a>
-             
-             </td>
-             <td>Details</td>
-              <td>DOT</td>
-              <td>Status</td>
+             <td>PHOTO</td>
            </tr>
            
-           <tr th:each="customerTransaction,iter: ${customerTransactionVOs}">
+           <tr th:each="photoId,iter: ${allPhotoIds}">
              <td th:text="${iter.index+1}"/>
-             <td th:text="${customerTransaction.toAccout}"/>
-              <td th:text="${customerTransaction.amount}">
-               </td>
-              <td th:text="${customerTransaction.details}"/>
-             <td th:text="${customerTransaction.dot}"/>
-           <td th:text="${customerTransaction.txStatus}"/>
-               
+             <td>
+                <img class="zoom" th:src="@{'/customer/profile/pic?id=' + ${photoId}}" style="height: 200px;"/>
+              </td> 
            </tr>
      </table>
   <a th:href="@{/customer/sendAccountStmt}">

@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.rab3tech.customer.service.CustomerProfilePicService;
 import com.rab3tech.customer.service.CustomerService;
 import com.rab3tech.customer.service.CustomerTransactionService;
 import com.rab3tech.customer.service.LocationService;
@@ -87,9 +88,10 @@ public class CustomerUIController {
 	
 	
 	@Autowired
-   private CustomerTransactionService customerTransactionService;
+    private CustomerTransactionService customerTransactionService;
 	
-	
+	@Autowired
+	private CustomerProfilePicService customerProfilePicService;
 	
 	
 	@PostMapping("/customer/profile/update")
@@ -99,11 +101,29 @@ public class CustomerUIController {
 	}
 	
 	@PostMapping("/customer/profile/photo")
-	public String changeCustomerPhoto(@RequestParam int cid,@RequestParam("pppppphoto") MultipartFile photo) throws IOException {
+	public String changeCustomerPhoto(@RequestParam int cid,@RequestParam("pppppphoto") MultipartFile photo,HttpSession session) throws IOException {
 		byte[] bphoto=photo.getBytes();
 		customerService.updatePhoto(cid, bphoto);
+		//This is updating new table which we just created
 		return "redirect:/customer/profile";// I will refresh your page
 	}
+	
+	
+	//Special code to render images by URL
+		@GetMapping("/customer/profile/pic")
+		public void findCustomerPhotoPic(@RequestParam int id,HttpServletResponse response) throws IOException {
+		   byte[] photo=customerProfilePicService.findPicById(id);
+		   response.setContentType("image/png");
+		   ServletOutputStream outputStream=response.getOutputStream();
+		   if(photo!=null) {
+			   //writing photo inside response body 
+			   outputStream.write(photo);
+		   }else {
+			   outputStream.write(new byte[] {});
+		   }
+		   outputStream.flush();
+		   outputStream.close();
+		}
 	
 	//Special code to render images by URL
 	@GetMapping("/customer/profile/photo")
@@ -207,6 +227,18 @@ public class CustomerUIController {
 		return "customer/customerTransaction"; // thyme leaf
 	}
 	
+	@GetMapping("/customer/profilePics")
+	public String showCustomerProfiles(Model model,HttpSession session) {
+		//Here we have to write logic to fetch data
+		//This is coming from session
+		LoginVO  loginVO2=(LoginVO)session.getAttribute("userSessionVO");
+		String currentLoggedInUserName=loginVO2.getUsername();
+		List<Integer> allPhotoIds=customerProfilePicService.findAllPicIds(currentLoggedInUserName);
+		model.addAttribute("allPhotoIds", allPhotoIds);
+		//customer/accountSummary - view name
+		return "customer/customerProfilePic"; // thyme leaf
+	}
+	
 
 	
 	@PostMapping("/customer/changePassword")
@@ -301,9 +333,13 @@ public class CustomerUIController {
 	}
 	
 	@PostMapping("/customer/upload/profile/pic")
-	public String changeProfilePic(@RequestParam("cid")  int cid,@RequestParam("photo") MultipartFile pphoto) throws IOException {
+	public String changeProfilePic(@RequestParam("cid")  int cid,@RequestParam("photo") MultipartFile pphoto,HttpSession session) throws IOException {
+		LoginVO  loginVO2=(LoginVO)session.getAttribute("userSessionVO");
+		String currentLoggedInUserName=loginVO2.getUsername();
 		byte[] photo=pphoto.getBytes();
 		customerService.updatePhoto(cid, photo);
+		//This is updating new table which we just created
+		customerProfilePicService.save(currentLoggedInUserName, photo);
 		return "redirect:/customer/customerTransaction";
 	}
 	
