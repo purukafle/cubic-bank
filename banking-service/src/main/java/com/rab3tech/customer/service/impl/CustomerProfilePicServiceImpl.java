@@ -14,6 +14,7 @@ import com.rab3tech.customer.dao.repository.LoginRepository;
 import com.rab3tech.customer.service.CustomerProfilePicService;
 import com.rab3tech.dao.entity.CustomerProfilePicEntity;
 import com.rab3tech.dao.entity.Login;
+import com.rab3tech.vo.CustomerProfilePicVO;
 
 @Service
 @Transactional
@@ -27,13 +28,13 @@ public class CustomerProfilePicServiceImpl implements CustomerProfilePicService 
 	
 	
 	@Override
-	public void save(String username,byte[] photo) {
+	public void save(String username,byte[] photo,String description) {
 		//Creating instance of entity
 		CustomerProfilePicEntity customerProfilePicEntity=new CustomerProfilePicEntity();
 		customerProfilePicEntity.setDoe(new Timestamp(new Date().getTime()));
 		customerProfilePicEntity.setDom(new Timestamp(new Date().getTime()));
 		customerProfilePicEntity.setPhoto(photo);
-		
+		customerProfilePicEntity.setDescription(description);
 		//Fetch login entity from database
 		Login login=loginRepository.findById(username).get();
 		customerProfilePicEntity.setLogin(login);
@@ -56,8 +57,32 @@ public class CustomerProfilePicServiceImpl implements CustomerProfilePicService 
 	}
 	
 	@Override
+	public List<CustomerProfilePicVO> findAllPic(String username) {
+		List<CustomerProfilePicVO>  profilePicVOs=new ArrayList<>();
+		//Fetch login entity from database
+		Login login=loginRepository.findById(username).get();
+		//one to many relationship
+		List<CustomerProfilePicEntity> customerProfilePicEntity=login.getCustomerProfilePics();
+		for(CustomerProfilePicEntity entity : customerProfilePicEntity){
+			CustomerProfilePicVO customerProfilePicVO=new CustomerProfilePicVO();
+			customerProfilePicVO.setDescription(entity.getDescription());
+			customerProfilePicVO.setPpid(entity.getPpid());
+			customerProfilePicVO.setDoe(entity.getDoe());
+			customerProfilePicVO.setDom(entity.getDom());
+			profilePicVOs.add(customerProfilePicVO);
+		}
+		
+		return profilePicVOs;
+	}
+	
+	@Override
 	public byte[] findPicById(int ppid) {
 		byte[]  photo=customerProfilePicRepository.findById(ppid).get().getPhoto();
 		return photo;
+	}
+	
+	@Override
+	public void deletePicById(int ppid) {
+		customerProfilePicRepository.deleteById(ppid);
 	}
 }

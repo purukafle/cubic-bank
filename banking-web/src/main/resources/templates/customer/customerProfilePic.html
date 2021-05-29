@@ -73,13 +73,28 @@
            <tr style="background-color: #95c929;">
              <td>SNO</td>
              <td>PHOTO</td>
+             <td>Description</td>
+             <td>DOE</td>
+             <td>DOM</td>
+              <td>Action</td>
            </tr>
            
-           <tr th:each="photoId,iter: ${allPhotoIds}">
+           <tr th:each="customerProfilePic,iter: ${customerProfilePicVOs}">
              <td th:text="${iter.index+1}"/>
              <td>
-                <img class="zoom" th:src="@{'/customer/profile/pic?id=' + ${photoId}}" style="height: 200px;"/>
+                <img class="zoom" th:src="@{'/customer/profile/pic?id=' + ${customerProfilePic.ppid}}" style="height: 200px;"/>
               </td> 
+                 <td th:text="${customerProfilePic.description}">
+              </td> 
+                 <td th:text="${customerProfilePic.doe}">
+              </td>
+                 <td th:text="${customerProfilePic.dom}">
+                  <td>
+                  	<a th:href="@{'/customer/deleteProfilePic?pid='+${customerProfilePic.ppid}}">
+<button type="button" class="btn btn-danger">DELETE</button>
+</a>
+                  </td>
+              </td>
            </tr>
      </table>
   <a th:href="@{/customer/sendAccountStmt}">

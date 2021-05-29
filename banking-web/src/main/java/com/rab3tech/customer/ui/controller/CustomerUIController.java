@@ -45,6 +45,7 @@ import com.rab3tech.customer.service.impl.SecurityQuestionService;
 import com.rab3tech.email.service.EmailService;
 import com.rab3tech.vo.ChangePasswordVO;
 import com.rab3tech.vo.CustomerAccountInfoVO;
+import com.rab3tech.vo.CustomerProfilePicVO;
 import com.rab3tech.vo.CustomerSavingVO;
 import com.rab3tech.vo.CustomerSecurityQueAnsVO;
 import com.rab3tech.vo.CustomerTransactionVO;
@@ -233,12 +234,18 @@ public class CustomerUIController {
 		//This is coming from session
 		LoginVO  loginVO2=(LoginVO)session.getAttribute("userSessionVO");
 		String currentLoggedInUserName=loginVO2.getUsername();
-		List<Integer> allPhotoIds=customerProfilePicService.findAllPicIds(currentLoggedInUserName);
-		model.addAttribute("allPhotoIds", allPhotoIds);
+		List<CustomerProfilePicVO> customerProfilePicVOs=customerProfilePicService.findAllPic(currentLoggedInUserName);
+		model.addAttribute("customerProfilePicVOs", customerProfilePicVOs);
 		//customer/accountSummary - view name
 		return "customer/customerProfilePic"; // thyme leaf
 	}
 	
+	//<a th:href="@{'/customer/deleteProfilePic?pid='+${customerProfilePic.ppid}}">
+	@GetMapping("/customer/deleteProfilePic")
+	public String deleteProfilePic(@RequestParam int pid,Model model,HttpSession session) {
+		customerProfilePicService.deletePicById(pid);
+		return "redirect:/customer/profilePics"; // thyme leaf
+	}
 
 	
 	@PostMapping("/customer/changePassword")
@@ -333,13 +340,13 @@ public class CustomerUIController {
 	}
 	
 	@PostMapping("/customer/upload/profile/pic")
-	public String changeProfilePic(@RequestParam("cid")  int cid,@RequestParam("photo") MultipartFile pphoto,HttpSession session) throws IOException {
+	public String changeProfilePic(@RequestParam("description")  String description,@RequestParam("cid")  int cid,@RequestParam("photo") MultipartFile pphoto,HttpSession session) throws IOException {
 		LoginVO  loginVO2=(LoginVO)session.getAttribute("userSessionVO");
 		String currentLoggedInUserName=loginVO2.getUsername();
 		byte[] photo=pphoto.getBytes();
 		customerService.updatePhoto(cid, photo);
 		//This is updating new table which we just created
-		customerProfilePicService.save(currentLoggedInUserName, photo);
+		customerProfilePicService.save(currentLoggedInUserName, photo,description);
 		return "redirect:/customer/customerTransaction";
 	}
 	

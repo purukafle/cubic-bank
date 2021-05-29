@@ -1,25 +1,23 @@
-package com.rab3tech.dao.entity;
+package com.rab3tech.vo;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
-@Entity
-@Table(name="customer_profile_pic")
-public class CustomerProfilePicEntity {
+import com.rab3tech.dao.entity.Login;
+
+public class CustomerProfilePicVO {
 
 	private int ppid;
 	private byte[] photo;
 	private String description;
-	private Login login;
 	private Timestamp doe;
 	private Timestamp dom;
 	
@@ -32,18 +30,7 @@ public class CustomerProfilePicEntity {
 		this.description = description;
 	}
 
-	@ManyToOne
-	@JoinColumn(name="ulogin", nullable=false)
-	public Login getLogin() {
-		return login;
-	}
 
-	public void setLogin(Login login) {
-		this.login = login;
-	}
-
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public int getPpid() {
 		return ppid;
 	}
@@ -52,7 +39,6 @@ public class CustomerProfilePicEntity {
 		this.ppid = ppid;
 	}
 
-	@Column(columnDefinition="longblob")
 	public byte[] getPhoto() {
 		return photo;
 	}
@@ -76,6 +62,14 @@ public class CustomerProfilePicEntity {
 	public void setDom(Timestamp dom) {
 		this.dom = dom;
 	}
+
+	@Override
+	public String toString() {
+		return "CustomerProfilePicVO [ppid=" + ppid + ", photo=" + Arrays.toString(photo) + ", description="
+				+ description + ", doe=" + doe + ", dom=" + dom + "]";
+	}
+
+
 	
 	
 }
