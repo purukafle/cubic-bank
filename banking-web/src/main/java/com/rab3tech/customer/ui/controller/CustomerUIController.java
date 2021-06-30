@@ -11,9 +11,13 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -52,6 +56,7 @@ import com.rab3tech.vo.CustomerTransactionVO;
 import com.rab3tech.vo.CustomerVO;
 import com.rab3tech.vo.EmailVO;
 import com.rab3tech.vo.FundTransferVO;
+import com.rab3tech.vo.LocationVO;
 import com.rab3tech.vo.LoginVO;
 import com.rab3tech.vo.PayeeInfoVO;
 
@@ -362,12 +367,19 @@ public class CustomerUIController {
 	}
 */
     
+	
     @GetMapping(value = { "/customer/account/enquiry", "/", "/mocha", "/welcome" })
 	public String showCustomerEnquiryPage(Model model) {
 		//LoadLocationAndAccountVO loadLocationAndAccountVOs = new LoadLocationAndAccountVO();
 		CustomerSavingVO customerSavingVO = new CustomerSavingVO();
-		
 		model.addAttribute("customerSavingVO", customerSavingVO);
+		//Here we can write code to fetch data from database
+		//then add it into request scope
+		List<LocationVO> locationVOs=locationService.findLocations();
+		
+		
+		//Map<String,String> locations =locationVOs.stream().collect(Collectors.toMap(LocationVO::getLcode,LocationVO::getName));
+		model.addAttribute("locations", locationVOs);
 		return "customer/customerEnquiry"; // customerEnquiry.html
 	}
 	
