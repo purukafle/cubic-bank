@@ -366,9 +366,12 @@ public class CustomerUIController {
 		return "customer/customerEnquiry"; // customerEnquiry.html
 	}
 */
-    
+	 @GetMapping(value = {"/"})
+		public String swagger(Model model) {
+			return "redirect:/swagger-ui.html"; // customerEnquiry.html
+		}
 	
-    @GetMapping(value = { "/customer/account/enquiry", "/", "/mocha", "/welcome" })
+    @GetMapping(value = { "/customer/account/enquiry","/mocha", "/welcome" })
 	public String showCustomerEnquiryPage(Model model) {
 		//LoadLocationAndAccountVO loadLocationAndAccountVOs = new LoadLocationAndAccountVO();
 		CustomerSavingVO customerSavingVO = new CustomerSavingVO();
