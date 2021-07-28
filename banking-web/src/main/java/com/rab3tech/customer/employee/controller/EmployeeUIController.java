@@ -62,9 +62,33 @@ public class EmployeeUIController {
 	   return "redirect:/employee/customerList";
 	}
 	
+	
+	@GetMapping("/employee/ecustomer")
+	public String enableCustomer(@RequestParam String userid, Model model) {
+		customerService.updateCustomerLockStatus(userid, "no");
+		List<CustomerVO> customerVOs = null;
+		customerVOs = customerService.findCustomers();
+		model.addAttribute("customerVOs", customerVOs);
+		return "employee/customersList";
+	}
+
+	@GetMapping("/employee/dcustomer")
+	public String disbleCustomer(@RequestParam String userid, Model model) {
+		customerService.updateCustomerLockStatus(userid, "yes");
+		List<CustomerVO> customerVOs = null;
+		customerVOs = customerService.findCustomers();
+		model.addAttribute("customerVOs", customerVOs);
+		return "employee/customersList";
+	}
+	
 	@GetMapping("/employee/customerList")
-	public String showCustomerList(Model model) {
-	   List<CustomerVO> customerVOs=customerService.findCustomers();
+	public String showCustomerList(@RequestParam(required = false) String filter, Model model) {
+	  List<CustomerVO> customerVOs=null;
+	  if(filter!=null) {
+		  customerVOs=customerService.findCustomers(filter);
+	  }else {
+		  customerVOs=customerService.findCustomers();  
+	  }
 	   model.addAttribute("customerVOs", customerVOs);
 	   return "employee/customersList";
 	}

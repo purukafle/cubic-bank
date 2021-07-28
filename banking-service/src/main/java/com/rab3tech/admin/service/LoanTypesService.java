@@ -10,4 +10,10 @@ public interface LoanTypesService {
 
 	List<LoanTypesVO> getAll();
 
+	LoanTypesVO findById(int did);
+
+	void deleteData(int did);
+
+	void update(LoanTypesVO loanTypesVO);
+
 }

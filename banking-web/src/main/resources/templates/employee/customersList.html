@@ -160,6 +160,17 @@
    <hr/>
   <div style="width: 100%">
   <h2>Customer List!</h2>
+   <a th:href="@{/employee/customerList?filter=employee}"> 
+ 		 <button type="button" class="btn btn-primary">EMPLOYEE</button>
+ 	 </a>
+ 	  &nbsp;
+ 	  <a th:href="@{/employee/customerList?filter=customer}"> 
+ 		 <button type="button" class="btn btn-warning">CUSTOMER</button>
+ 	 </a>
+ 	 &nbsp;
+ 	 <a th:href="@{/employee/customerList}"> 
+ 		 <button type="button" class="btn btn-success">ALL</button>
+ 	 </a>
  <hr/>
     <table  class="table table-striped table-bordered" style="width:100%">
   <thead>
@@ -167,7 +178,7 @@
   <td> SNO </td>
   <td> Name </td>
   <td> Email </td>
-   <td> Userid </td>
+   <td> Role </td>
    <td> Photo </td>
    <td> Action </td>
   </tr>
@@ -182,14 +193,24 @@
     </td>
     <td th:text="${customerVO.name}">
     <td th:text="${customerVO.email}"/>
-    <td th:text="${customerVO.userid}"/>
+    <td th:text="${customerVO.role}"/>
     <td>
     <img th:src="@{'/admin/customers/photo?cid=' + ${customerVO.id}}" style="height: 100px;"/>
     </td>
      <td>
-       <a th:href="@{'/customer/deleteCustomer?userid='+${customerVO.userid}}"> 
- 		 <button type="button" class="btn btn-primary">DELETE</button>
- 	 </a>
+     
+     
+     <div th:switch="${customerVO.locked}"> 
+  <p th:case="'yes'">  <a th:href="@{'/employee/ecustomer?userid='+${customerVO.userid}}"> 
+ 		 <button type="button" class="btn btn-danger">DS</button>
+ 	 </a></p>
+  <p th:case="'no'">   
+       <a th:href="@{'/employee/dcustomer?userid='+${customerVO.userid}}"> 
+ 		 <button type="button" class="btn btn-primary">EN</button>
+ 	 </a></p>
+</div>
+ 	 
+ 	 
      </td>
   </tr>
   </tbody>

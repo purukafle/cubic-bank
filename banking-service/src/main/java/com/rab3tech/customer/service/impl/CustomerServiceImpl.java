@@ -217,6 +217,8 @@ public class CustomerServiceImpl implements CustomerService {
 	public void updateCustomerLockStatus(String userid,String status) {
 		Customer customer=customerRepository.findByEmail(userid).get();
 		customer.getLogin().setLocked(status);
+		
+		//This is code snippet to send email to the user
 		EmailVO  em=new EmailVO();
 		em.setBody("Your account is locked!!!");
 		em.setFrom("javahunk100@gmail.com");
@@ -239,6 +241,29 @@ public class CustomerServiceImpl implements CustomerService {
 		return customers.stream(). //Stream<Customer>
 		map(CustomerMapper::toVO).//Stream<CustomerVO>
 		collect(Collectors.toList()); //List<CustomerVO>
+	}
+	
+
+	//Admin ., ADMIN
+	@Override
+	public List<CustomerVO> findCustomers(String prole) {
+		List<Customer> customers = customerRepository.findAll();
+		 List<CustomerVO> customerVOs=new ArrayList<CustomerVO>(); 
+		 for(Customer customer:customers) {
+			 //Accessing the role of the customer
+			 Set<Role> roles=customer.getLogin().getRoles();
+			 String roleName=null;
+			 for(Role rr:roles) {
+				 roleName=rr.getName();
+				 break;
+			 }
+			 if(prole.equalsIgnoreCase(roleName)) {
+				 CustomerVO customerVO=CustomerMapper.toVO(customer);
+				 customerVO.setRole(roleName);
+				 customerVOs.add(customerVO); 
+			 }
+		  }
+		 return customerVOs;
 	}
 	
 	
