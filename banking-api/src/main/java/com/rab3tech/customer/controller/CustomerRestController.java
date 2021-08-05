@@ -1,5 +1,6 @@
 package com.rab3tech.customer.controller;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +19,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.rab3tech.customer.service.CustomerService;
+import com.rab3tech.customer.service.CustomerTransactionService;
 import com.rab3tech.customer.service.LoginService;
 import com.rab3tech.utils.PasswordGenerator;
 import com.rab3tech.vo.ApplicationResponseVO;
 import com.rab3tech.vo.ChangePasswordRequestVO;
+import com.rab3tech.vo.CustomerTransactionVO;
 import com.rab3tech.vo.CustomerVO;
 import com.rab3tech.vo.LoginRequestVO;
 import com.rab3tech.vo.LoginVO;
@@ -36,10 +41,58 @@ public class CustomerRestController {
 	private JavaMailSender javaMailSender;
 	
 	@Autowired
+    private CustomerTransactionService customerTransactionService;
+	
+	@Autowired
 	private CustomerService customerService;
 	
 	 @Autowired
 	 private BCryptPasswordEncoder bCryptPasswordEncoder;
+	 
+	 
+	 
+	 @GetMapping("/customer/lockunlock")
+	public ApplicationResponseVO customerLock(String userid,String status) {
+		   customerService.updateCustomerLockStatus(userid, status);
+		   ApplicationResponseVO applicationResponseVO=new ApplicationResponseVO();
+		   applicationResponseVO.setCode(200);
+		   applicationResponseVO.setStatus("success");
+		   applicationResponseVO.setMessage("Lock status is updated!");
+		   return applicationResponseVO;
+	}
+		
+		
+	 
+	 @GetMapping("/customer/customerList")
+		public  List<CustomerVO> showCustomerList(@RequestParam(required = false) String filter) {
+		  List<CustomerVO> customerVOs=null;
+		  if(filter!=null) {
+			  customerVOs=customerService.findCustomers(filter);
+		  }else {
+			  customerVOs=customerService.findCustomers();  
+		  }
+		   return customerVOs;
+		}
+	 
+	 @GetMapping("/customer/customerTransaction/{username}")
+	 public List<CustomerTransactionVO> showCustomerTransaction(@RequestParam(required=false) String sort,@PathVariable String username) {
+			//Here we have to write logic to fetch data
+			//This is coming from session
+			List<CustomerTransactionVO>  customerTransactionVOs=customerTransactionService.findCustomerTransaction(username);
+			
+			if(sort==null){
+				Collections.sort(customerTransactionVOs,(t1,t2)->t2.getDot().compareTo(t1.getDot()));
+			} 	
+			else{
+				if("desc".equals(sort)) {
+					Collections.sort(customerTransactionVOs,(t1,t2)->(int)(t2.getAmount()-t1.getAmount()));
+				}else {
+					Collections.sort(customerTransactionVOs,(t1,t2)->(int)(t1.getAmount()-t2.getAmount()));
+				}
+				
+			}
+			return customerTransactionVOs; // thyme leaf
+		}
 	
 	
 	@GetMapping("/amount/words") 

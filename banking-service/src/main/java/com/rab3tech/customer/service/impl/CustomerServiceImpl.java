@@ -10,6 +10,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.rab3tech.admin.dao.repository.AccountStatusRepository;
 import com.rab3tech.admin.dao.repository.AccountTypeRepository;
 import com.rab3tech.admin.dao.repository.MagicCustomerRepository;
-import com.rab3tech.aop.advice.TimeLogger;
 import com.rab3tech.customer.dao.repository.CustomerAccountApprovedRepository;
 import com.rab3tech.customer.dao.repository.CustomerAccountEnquiryRepository;
 import com.rab3tech.customer.dao.repository.CustomerAccountInfoRepository;
@@ -48,7 +49,6 @@ import com.rab3tech.utils.TransactionIdGeneratorUtils;
 import com.rab3tech.utils.Utils;
 import com.rab3tech.vo.AccountTypeVO;
 import com.rab3tech.vo.CustomerAccountInfoVO;
-import com.rab3tech.vo.CustomerSavingVO;
 import com.rab3tech.vo.CustomerUpdateVO;
 import com.rab3tech.vo.CustomerVO;
 import com.rab3tech.vo.EmailVO;
@@ -61,6 +61,9 @@ import com.rab3tech.vo.UpdatePayeeVO;
 @Service
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
+	
+
+	private static final Logger logger = LoggerFactory.getLogger(CustomerServiceImpl.class);
 
 	@Autowired
 	private MagicCustomerRepository customerRepository;
@@ -103,6 +106,7 @@ public class CustomerServiceImpl implements CustomerService {
 	
 	@Override
 	public FundTransferVO executeTransaction(FundTransferVO fundTransferVO){
+		System.currentTimeMillis();
 		CustomerTransaction customerTransaction=new CustomerTransaction();
 		customerTransaction.setAmount(fundTransferVO.getAmount());
 		customerTransaction.setBankName("ICICI Bank");
@@ -193,7 +197,7 @@ public class CustomerServiceImpl implements CustomerService {
 		try {
 		 dcustomer = customerRepository.save(pcustomer);
 		}catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Problem while customer registration [{}]",e.getMessage());
 		}
 		customerVO.setId(dcustomer.getId());
 		customerVO.setUserid(customerVO.getUserid());

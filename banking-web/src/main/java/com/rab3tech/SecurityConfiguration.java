@@ -46,6 +46,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Override 
   protected void configure(HttpSecurity http) throws Exception {   
     http.authorizeRequests() 
+       .antMatchers("/employee/customers/photo").permitAll()
+    	.antMatchers("/v3/user/login").permitAll()
+        .antMatchers("/admin/loantypes").permitAll() 
         .antMatchers("/admin/loantypes").permitAll() 
         .antMatchers("/admin/dloantype").permitAll()
         .antMatchers("/admin/loantype").permitAll() 

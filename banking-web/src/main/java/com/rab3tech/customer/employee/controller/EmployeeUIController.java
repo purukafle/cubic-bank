@@ -1,8 +1,11 @@
 package com.rab3tech.customer.employee.controller;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +43,20 @@ public class EmployeeUIController {
 	
 	@Autowired
 	private EmailService emailService;
+	
+	@GetMapping("/employee/customers/photo")
+	public void findCustomerPhoto(@RequestParam int cid,HttpServletResponse response) throws IOException {
+	   byte[] photo=customerService.findPhotoByid(cid);
+	   response.setContentType("image/png");
+	   ServletOutputStream outputStream=response.getOutputStream();
+	   if(photo!=null) {
+		   outputStream.write(photo);
+	   }else {
+		   outputStream.write(new byte[] {});
+	   }
+	   outputStream.flush();
+	   outputStream.close();
+	}
 	
 	
 	@GetMapping("/customer/lock")

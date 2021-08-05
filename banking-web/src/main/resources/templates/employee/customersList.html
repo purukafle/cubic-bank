@@ -29,101 +29,44 @@
 </style>
 
 <script type="text/javascript">
-
-
-   function updateRole() {
-	   var tcid=$("#ceid").val();
-	   var trolesid = []; // JavaScript style to declare the Array
-       $("input[type='checkbox'][id='rolecheckbox']:checked").each(function(i) {
-    	   trolesid.push($(this).val());
-       });
-	   console.log(trolesid);  
-   	   //Create JavaScript object 
-   	   var obj={cid:tcid,rolesid:trolesid}; //List<Integer> rolesid
-   	   
-    	   //convert above object into JSON
-   	   var jsonData=JSON.stringify(obj);
-    	  
-    	   //Creating 
-    	   const options = {
-                   method: 'PUT',
-                   body: jsonData,
-                   headers: {
-                     'Content-Type': 'application/json',
-                     'Accept': 'application/json'
-                   }
-                 };
-    	   
-    	   var promise=fetch("/v3/customer/roles",options);
-    	   promise.then(response=>response.json())
-    	   .then(function(data){
-				 if(data.status=='success'){
-					 $("#rolesModal").modal('hide');
-					 $("#mmessage").html(data.message);
-					
-				 }
-    	   });
-   }
-   
- 
-    //currentRoles=[1,2]
-   function isRoleMatch(currentRoles,roleid){ //2
-	   for(var t=0;t<currentRoles.length;t++) {
-		    if(currentRoles[t]==roleid){
-		    	return true;
-		    }
-	   }
-	   return false;
-   }
-
-   function openRolesPopup(cid,name,userid){
-	   //fetch all the roles from database
-	    //make ajax call
-    	   //usernameOrEmail="+usernameEmail sending data as query string
-	        var promise= fetch("/v3/customer/roles?userid="+userid); 	
-	        promise.then(response=>response.json()).then(function(data){
-	        	console.log(data);
-	        	var contents="";
-	        	//roleVOs
-	        	var currentRoles=data.currentRoles;
-	        	for(var i =0; i<data.roleVOs.length;i++) {
-                    var rowdata=data.roleVOs[i];
-                    console.log(rowdata);
-                    contents=contents+'<tr>';
-                    contents=contents+'<td>'+rowdata.id+'</td>';
-                    contents=contents+'<td>'+rowdata.name+'</td>';
-                    contents=contents+'<td>'+rowdata.description+'</td>';
-                    if(isRoleMatch(currentRoles,rowdata.id)) {
-                    	contents=contents+'<td><input checked type="checkbox" id="rolecheckbox" name="checkbox" value="'+rowdata.id+'"></td>';	
-                    }else{
-                    	contents=contents+'<td><input  type="checkbox" id="rolecheckbox" name="checkbox" value="'+rowdata.id+'"></td>';	
-                    }
-                    contents=contents+'</tr>';
-	        	}
-	        	$("#ceid").val(cid);
-	        	$("#roleContents").html(contents);
-	        });
-	 	   
-		   $("#photoIdWithRoleModal").attr("src","/admin/customers/photo?cid="+cid);
-	      $("#rolesModal").modal('show');
-   }
   
-   function openModal(cid,name,mobile){
-	   console.log("cid = "+cid);
-	   console.log("name = "+name);
-	   console.log("mobile = "+mobile);
-	   //<img  src=""
-	   //JavaScript code to render the image
-	   
-	   $("#photophoto").attr("src","/admin/customers/photo?cid="+cid);
-	   $("#cid").val(cid);
-	   $("#pname").val(name);
-	   $("#pmobile").val(mobile);
-	   
-	   $("#editProfilePopup").modal('show');
-	   
-   }
+  
+  function lockUnlock(buttonStatus,cid,userid) {
+		console.log(buttonStatus);
+		console.log(cid);
+		var status="yes";
+		var btId=buttonStatus+"_"+cid;
+		
+		$("#"+btId).hide();
+		
+		if(buttonStatus=='ds') {
+			btId="en_"+cid;
+			status="no";
+		}else{
+			btId="ds_"+cid;
+		}
 
+		$("#"+btId).show();
+
+		//AJAX call to change the status of locked inside login table
+		fetch("/v3/customer/lockunlock?userid="+userid+"&status="+status)
+		.then(res=>res.json()).then(data=>{
+			console.log(data);
+		});
+		
+		
+		/* @GetMapping("/customer/lockunlock")
+		public ApplicationResponseVO customerLock(String userid,String status) {
+			   customerService.updateCustomerLockStatus(userid, status);
+			   ApplicationResponseVO applicationResponseVO=new ApplicationResponseVO();
+			   applicationResponseVO.setCode(200);
+			   applicationResponseVO.setStatus("success");
+			   applicationResponseVO.setMessage("Lock status is updated!");
+			   return applicationResponseVO;
+		}
+		 */
+		
+  }
 
 </script>
 
@@ -195,19 +138,22 @@
     <td th:text="${customerVO.email}"/>
     <td th:text="${customerVO.role}"/>
     <td>
-    <img th:src="@{'/admin/customers/photo?cid=' + ${customerVO.id}}" style="height: 100px;"/>
+    <img th:src="@{'/employee/customers/photo?cid=' + ${customerVO.id}}" style="height: 60px;"/>
     </td>
      <td>
      
      
      <div th:switch="${customerVO.locked}"> 
-  <p th:case="'yes'">  <a th:href="@{'/employee/ecustomer?userid='+${customerVO.userid}}"> 
- 		 <button type="button" class="btn btn-danger">DS</button>
- 	 </a></p>
+  <p th:case="'yes'">  
+ 		
+ 		 <button type="button" th:id="@{'ds_' + ${customerVO.id}}"  th:onclick="|lockUnlock('ds','${customerVO.id}','${customerVO.email}')|"  class="btn btn-danger">DS</button>
+ 		 <button type="button" th:id="@{'en_' + ${customerVO.id}}" th:onclick="|lockUnlock('en','${customerVO.id}','${customerVO.email}')|"  class="btn btn-primary" style="display:none;">EN</button>
+ 	 
+ 	 </p>
   <p th:case="'no'">   
-       <a th:href="@{'/employee/dcustomer?userid='+${customerVO.userid}}"> 
- 		 <button type="button" class="btn btn-primary">EN</button>
- 	 </a></p>
+        <button type="button" th:id="@{'ds_' + ${customerVO.id}}"  th:onclick="|lockUnlock('ds','${customerVO.id}','${customerVO.email}')|"  class="btn btn-danger" style="display:none;">DS</button>
+ 		 <button type="button" th:id="@{'en_' + ${customerVO.id}}" th:onclick="|lockUnlock('en','${customerVO.id}','${customerVO.email}')|"  class="btn btn-primary" >EN</button>
+ 	 </p>
 </div>
  	 
  	 

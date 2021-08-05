@@ -315,8 +315,10 @@ public class CustomerUIController {
 	@PostMapping("/customer/account/registration")
 	public String createCustomer(@ModelAttribute CustomerVO customerVO, Model model) {
 		// saving customer into database
-		logger.debug(customerVO.toString());
+		//10:10 AM 
+		logger.debug("Post -> /customer/account/registration is called for customer [{}]",customerVO.toString());
 		customerVO = customerService.createAccount(customerVO);
+		logger.info("Customer registration is done succcessfully");
 		// Write code to send email
 
 		EmailVO mail = new EmailVO(customerVO.getEmail(), "javahunk2020@gmail.com",
@@ -324,7 +326,7 @@ public class CustomerUIController {
 		mail.setUsername(customerVO.getUserid());
 		mail.setPassword(customerVO.getPassword());
 		emailService.sendUsernamePasswordEmail(mail);
-		System.out.println(customerVO);
+		logger.debug("Email data [{}]",mail.toString());
 		model.addAttribute("loginVO", new LoginVO());
 		model.addAttribute("message", "Your account has been setup successfully , please check your email.");
 		return "customer/login";
