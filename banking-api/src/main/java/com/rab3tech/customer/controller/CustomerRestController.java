@@ -50,8 +50,20 @@ public class CustomerRestController {
 	 private BCryptPasswordEncoder bCryptPasswordEncoder;
 	 
 	 
+	@GetMapping("/employee/customerList")
+	public List<CustomerVO>  showCustomerList(@RequestParam(required = false) String filter,
+			Model model) {
+		  List<CustomerVO> customerVOs=null;
+		  if(filter!=null && !"all".equalsIgnoreCase(filter)) {
+			  customerVOs=customerService.findCustomers(filter);
+		  }else {
+			  customerVOs=customerService.findCustomers();  
+		  }
+		   return customerVOs; //Java object will be converted into JSON data
+	}
 	 
-	 @GetMapping("/customer/lockunlock")
+	 
+    @GetMapping("/customer/lockunlock")
 	public ApplicationResponseVO customerLock(String userid,String status) {
 		   customerService.updateCustomerLockStatus(userid, status);
 		   ApplicationResponseVO applicationResponseVO=new ApplicationResponseVO();

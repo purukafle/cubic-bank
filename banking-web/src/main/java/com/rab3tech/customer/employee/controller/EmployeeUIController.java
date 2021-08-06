@@ -100,13 +100,12 @@ public class EmployeeUIController {
 	
 	@GetMapping("/employee/customerList")
 	public String showCustomerList(@RequestParam(required = false) String filter, Model model) {
-	  List<CustomerVO> customerVOs=null;
-	  if(filter!=null) {
-		  customerVOs=customerService.findCustomers(filter);
-	  }else {
-		  customerVOs=customerService.findCustomers();  
-	  }
-	   model.addAttribute("customerVOs", customerVOs);
+		/*
+		 * List<CustomerVO> customerVOs=null; if(filter!=null) {
+		 * customerVOs=customerService.findCustomers(filter); }else {
+		 * customerVOs=customerService.findCustomers(); }
+		 * model.addAttribute("customerVOs", customerVOs);
+		 */
 	   return "employee/customersList";
 	}
 	

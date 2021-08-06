@@ -33,7 +33,7 @@
       function showBrach() {
     	  
     	  //Make rest call
-    	  fetch("http://localhost:9999/v3/branches/").then(res=>res.json()).then(function(data){
+    	  fetch("/v3/branches/").then(res=>res.json()).then(function(data){
     		  var contents='';
     		  for(var x=0;x<data.length;x++){
     			  contents=contents+'<tr>';
